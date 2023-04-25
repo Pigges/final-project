@@ -1,14 +1,17 @@
 from tkinter import *
 import requests
+from SearchResultBtn import SearchResultBtn
 
 def showResults(root, search):
     window = Toplevel(root)
     resp = fetch(search)
 
-    #Label(window, text="Search Results!").pack()
+    Label(window, text=f"Found {len(resp)} results for '{search}'").pack()
+
+    buttons = []
     
     for city in resp:
-        Button(window, text=city["display_name"], command=lambda: handleSelect(city["display_name"])).pack()
+        buttons.append(SearchResultBtn(window, city))
 
 
 def fetch(q):
@@ -16,6 +19,3 @@ def fetch(q):
     city = city.json()
     #print(city)
     return city
-
-def handleSelect(city):
-    print(city)
