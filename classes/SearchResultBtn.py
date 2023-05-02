@@ -1,5 +1,4 @@
 from tkinter import *
-import json
 from utils.file import read, write
 
 class SearchResultBtn:

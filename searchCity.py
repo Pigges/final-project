@@ -1,6 +1,6 @@
 from tkinter import *
 import requests
-from SearchResultBtn import SearchResultBtn
+from classes.SearchResultBtn import SearchResultBtn
 
 def showResults(root, search):
     window = Toplevel(root)
