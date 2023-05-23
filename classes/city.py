@@ -6,6 +6,7 @@ from tkinter import ttk, Frame, Label, Button
 import requests
 
 from utils.file import write, read
+from classes.period import Period
 
 # Dictionary of all weather types
 strings = {
@@ -125,16 +126,7 @@ class City:
 
         # Sort data by period and append it in self.periods
         for period in data['properties']['timeseries']:
-            code = 'n/a'
-            # Check wether or not we have a symbol_code for the current period
-            if 'next_12_hours' in period['data'].keys():
-                code = period['data']['next_12_hours']['summary']['symbol_code']
-
-            self.periods.append({
-                "time": period['time'],
-                "details": period['data']['instant']['details'],
-                "symbol_code": code
-            })
+            self.periods.append(Period(period).get_period())
 
         weather = f"{get_string(self.periods[0]['symbol_code'])} "
         weather += f"{self.periods[0]['details']['air_temperature']}°"
