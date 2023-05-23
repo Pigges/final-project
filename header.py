@@ -1,14 +1,33 @@
-from tkinter import *
-import searchCity
+"""
+Handles the Header Frame
+"""
+
+from tkinter import ttk
+import search_city
 
 # Search results
-def citySearch(root, q):
-    searchCity.showResults(root, q)
+def city_search(root, query):
+    """
+    Call search_city to make a city search
 
-def createHeader(root):
-    header = Frame(root)
+    Keyword arguments:
+    root -- the master tkinter frame
+    query -- the search query
+    """
+    search_city.show_results(root, query)
+
+# Set up the Header Frame
+def create_header(root):
+    """
+    Creating the Header Frame
+
+    Keyword arguments:
+    root -- the master tkinter frame
+    """
+    header = ttk.Frame(root)
     header.pack(pady=10)
-    Label(header, text="Lookup weather for").grid(column=0, row=0, padx=10)
-    search_box = Entry(header)
+    ttk.Label(header, text="Lookup weather for").grid(column=0, row=0, padx=10)
+    search_box = ttk.Entry(header)
     search_box.grid(column=1, row=0)
-    Button(header, text="Search", command=lambda: citySearch(root, search_box.get())).grid(column=2, row=0, padx=10)
+    search = ttk.Button(header, text="Search", command=lambda: city_search(root, search_box.get()))
+    search.grid(column=2, row=0, padx=10)

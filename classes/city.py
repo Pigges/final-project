@@ -1,8 +1,13 @@
-from tkinter import *
+"""
+Handle the City weather report
+"""
+
+from tkinter import ttk, Frame, Label, Button
 import requests
 
 from utils.file import write, read
 
+# Dictionary of all weather types
 strings = {
     'clearsky_day': 'Clear Sky Day',
     'clearsky_night': 'Clear Sky Night',
@@ -89,22 +94,28 @@ strings = {
     'heavysnow': 'Heavy Snow'
 }
 
-def getString(key):
+def get_string(key):
+    """
+    Grab string from string list safely
+
+    Keyword arguments:
+    key -- the key value to grab
+    """
     try:
         return strings[key]
-    except:
+    except KeyError:
         return 'n/a'
 
 class City:
+    """
+    Class for the City weather report
+    """
     def __init__(self, root, geo):
-        self.color = '#ccc';
+        self.color = '#ccc'
         self.place_id = geo["place_id"]
         self.frame = Frame(root, bg=self.color, padx=20)
         self.frame.pack(pady=20)
-        # Fetch data from API using geo coordinates
-        data = requests.get(f"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={geo['lat']}&lon={geo['lon']}", headers={"User-Agent": "Weather App - https://github.com/Pigges/final-project"})
-        # Parse response into JSON
-        data = data.json()
+        data = self.fetch_weather(geo)
 
         # Save units
         self.units = data['properties']['meta']['units']
@@ -115,7 +126,8 @@ class City:
         # Sort data by period and append it in self.periods
         for period in data['properties']['timeseries']:
             code = 'n/a'
-            if 'next_12_hours' in period['data'].keys(): # Check wether or not we have a symbol_code for the current period
+            # Check wether or not we have a symbol_code for the current period
+            if 'next_12_hours' in period['data'].keys():
                 code = period['data']['next_12_hours']['summary']['symbol_code']
 
             self.periods.append({
@@ -124,17 +136,34 @@ class City:
                 "symbol_code": code
             })
 
-        weather = f"{getString(self.periods[0]['symbol_code'])} {self.periods[0]['details']['air_temperature']}°"
+        weather = f"{get_string(self.periods[0]['symbol_code'])} "
+        weather += f"{self.periods[0]['details']['air_temperature']}°"
 
         name = geo['display_name'].split(', ')
         name = ', '.join(name[0:3] + [name[-1]])
-        
-        Label(self.frame, text=weather).grid(column=0, row=1)
+
+        ttk.Label(self.frame, text=weather).grid(column=0, row=1)
         Label(self.frame, text=name, bg=self.color, font='bold').grid(column=0, row=0)
         Button(self.frame, text='X', fg='red', command=self.remove).grid(column=2, row=0)
 
     def remove(self):
+        """
+        Delete and destroy this city
+        """
         cities = read('./data/cities.json')
         del cities[str(self.place_id)]
         write('./data/cities.json', cities)
         self.frame.destroy()
+
+    def fetch_weather(self, geo):
+        """
+        Fetch the weather for the city
+        """
+        # Fetch data from API using geo coordinates
+        link = f"https://api.met.no/weatherapi/locationforecast/2.0/\
+compact?lat={geo['lat']}&lon={geo['lon']}"
+        data = requests.get(link, timeout=5, headers={
+            "User-Agent": "Weather App - https://github.com/Pigges/final-project"
+        })
+        # Parse response into JSON
+        return data.json()
