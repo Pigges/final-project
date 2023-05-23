@@ -163,7 +163,7 @@ class City:
         link = f"https://api.met.no/weatherapi/locationforecast/2.0/\
 compact?lat={geo['lat']}&lon={geo['lon']}"
         data = requests.get(link, timeout=5, headers={
-            "User-Agent": "Weather App - https://github.com/Pigges/final-project"
+            "User-Agent": "Weather App - https://github.com/Pigges/weatherapp-py"
         })
         # Parse response into JSON
         return data.json()
