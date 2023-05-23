@@ -19,4 +19,7 @@ class Period:
         }
 
     def get_period(self):
+        """
+        Retrieves the period
+        """
         return self.period
