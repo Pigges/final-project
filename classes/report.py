@@ -35,3 +35,4 @@ class Report:
         for widget in self.frame.winfo_children():
             widget.destroy()
         self.setup()
+        return True

@@ -15,6 +15,7 @@ def city_search(root, query):
     query -- the search query
     """
     search_city.show_results(root, query)
+    return True
 
 # Set up the Header Frame
 def create_header(root):
@@ -31,3 +32,4 @@ def create_header(root):
     search_box.grid(column=1, row=0)
     search = ttk.Button(header, text="Search", command=lambda: city_search(root, search_box.get()))
     search.grid(column=2, row=0, padx=10)
+    return True
