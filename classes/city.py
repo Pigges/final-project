@@ -126,10 +126,10 @@ class City:
 
         # Sort data by period and append it in self.periods
         for period in data['properties']['timeseries']:
-            self.periods.append(Period(period).get_period())
+            self.periods.append(Period(period))
 
-        weather = f"{get_string(self.periods[0]['symbol_code'])} "
-        weather += f"{self.periods[0]['details']['air_temperature']}°"
+        weather = f"{get_string(self.periods[0].get_code())} "
+        weather += f"{self.periods[0].get_details()['air_temperature']}°"
 
         name = geo['display_name'].split(', ')
         name = ', '.join(name[0:3] + [name[-1]])
